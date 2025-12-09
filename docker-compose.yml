@@ -23,21 +23,10 @@ services:
     depends_on:
       - mariadb
     environment:
-      # --- generic style (if your app reads these) ---
-      DB_HOST: mariadb
-      DB_PORT: 3306
-      DB_NAME: xp-users
-      DB_USER: user
-      DB_PASSWORD: password
-
-      # --- OR Spring Boot style, if you're using it ---
-      # SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
-      # SPRING_DATASOURCE_USERNAME: user
-      # SPRING_DATASOURCE_PASSWORD: password
-
-      # Log directory used by the service (for logback-spring.xml)
-      # LOG_DIR: /logs
-
+      # --- Spring Boot style, if you're using it ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
     ports:
       - "8080:8080"   # change if your service listens on a different port
     volumes:
