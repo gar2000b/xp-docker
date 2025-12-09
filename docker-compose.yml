@@ -35,8 +35,13 @@ services:
       # SPRING_DATASOURCE_USERNAME: user
       # SPRING_DATASOURCE_PASSWORD: password
 
+      # Log directory used by the service (for logback-spring.xml)
+      LOG_DIR: /logs
+
     ports:
       - "8080:8080"   # change if your service listens on a different port
+    volumes:
+      - ./logs:/logs
 
 volumes:
   mariadb_data:
