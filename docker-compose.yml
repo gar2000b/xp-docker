@@ -28,7 +28,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
     ports:
-      - "8080:8080"   # change if your service listens on a different port
+      - "8081:8081"   # change if your service listens on a different port
     volumes:
       - ./logs:/app/logs
 
