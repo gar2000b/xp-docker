@@ -32,6 +32,22 @@ services:
     volumes:
       - ./logs:/app/logs
 
+  xp-template-service:
+    image: gar2000b/xp-template-service:latest
+    container_name: xp-template-service
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    environment:
+      # --- Spring Boot style, if you're using it ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+
 volumes:
   mariadb_data:
 
