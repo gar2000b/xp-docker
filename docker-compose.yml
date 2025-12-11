@@ -33,6 +33,25 @@ services:
       - influxdb_data:/var/lib/influxdb2
       - influxdb_config:/etc/influxdb2
 
+  xp-ohlcv-generator-service:
+    image: gar2000b/xp-ohlcv-generator-service:latest
+    container_name: xp-ohlcv-generator-service
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+    environment:
+      # --- Spring Boot configuration ---
+      SERVER_PORT: 8083
+      # --- InfluxDB configuration ---
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: xp-admin-token-12345
+      INFLUXDB_ORG: xp-project
+      INFLUXDB_BUCKET: ohlcv_data
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./logs:/app/logs
+
   xp-users-service:
     image: gar2000b/xp-users-service:latest
     container_name: xp-users-service
