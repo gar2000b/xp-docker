@@ -21,8 +21,10 @@ done
 
 docker exec -i mariadb sh /sql/00_init_all.sh
 
+echo ">>> Launch complete. MariaDB is starting with a fresh data directory."
+
 docker exec -i influxdb influx bucket create --name ohlcv_data --org xp-project --token xp-admin-token-12345 --host http://localhost:8086 || echo "Bucket ohlcv_data may already exist (OK)"
 
-echo ">>> Launch complete. MariaDB is starting with a fresh data directory."
+echo ">>> InfluxDB ohlcv_data bucket created."
 
 tree
