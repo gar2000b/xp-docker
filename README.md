@@ -310,5 +310,6 @@ This is a **development/testing** environment. For production deployments, ensur
 
 ## 🔗 Related
 
+- [xp-project](https://github.com/gar2000b/xp-project) - Main workspace repository
 - [xp-users-service](https://github.com/gar2000b/xp-users-service)
 - [xp-template-service](https://github.com/gar2000b/xp-template-service)
