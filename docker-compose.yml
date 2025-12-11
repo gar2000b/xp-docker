@@ -16,6 +16,23 @@ services:
       - mariadb_data:/var/lib/mysql
       - ./sql:/sql
 
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: password123
+      DOCKER_INFLUXDB_INIT_ORG: xp-project
+      DOCKER_INFLUXDB_INIT_BUCKET: quotes
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: xp-admin-token-12345
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+
   xp-users-service:
     image: gar2000b/xp-users-service:latest
     container_name: xp-users-service
@@ -50,4 +67,6 @@ services:
 
 volumes:
   mariadb_data:
+  influxdb_data:
+  influxdb_config:
 
