@@ -3,17 +3,27 @@ set -e
 
 cd "$(dirname "$0")"
 
+# Detect if colors are supported
+if [[ -t 1 ]] && command -v tput > /dev/null 2>&1; then
+    # Terminal supports colors
+    RED=$(tput setaf 1)
+    GREEN=$(tput setaf 2)
+    YELLOW=$(tput setaf 3)
+    BLUE=$(tput setaf 4)
+    NC=$(tput sgr0) # No Color
+else
+    # No color support - use empty strings
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+fi
+
 echo "=========================================="
 echo "Docker Volume Size Checker"
 echo "=========================================="
 echo ""
-
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
 
 # Function to print section headers
 print_section() {
