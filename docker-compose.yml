@@ -52,9 +52,9 @@ services:
     volumes:
       - ./logs:/app/logs
 
-  xp-users-service:
+  xp-users-service-1:
     image: gar2000b/xp-users-service:latest
-    container_name: xp-users-service
+    container_name: xp-users-service-1
     restart: unless-stopped
     depends_on:
       - mariadb
@@ -64,7 +64,39 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
     ports:
-      - "8081:8081"   # change if your service listens on a different port
+      - "8081:8081"
+    volumes:
+      - ./logs:/app/logs
+
+  xp-users-service-2:
+    image: gar2000b/xp-users-service:latest
+    container_name: xp-users-service-2
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    environment:
+      # --- Spring Boot style, if you're using it ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8084:8081"
+    volumes:
+      - ./logs:/app/logs
+
+  xp-users-service-3:
+    image: gar2000b/xp-users-service:latest
+    container_name: xp-users-service-3
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    environment:
+      # --- Spring Boot style, if you're using it ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8086:8081"
     volumes:
       - ./logs:/app/logs
 
