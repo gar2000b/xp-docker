@@ -34,7 +34,7 @@ static_resources:
     # Cluster for xp-users-service instances
     - name: users_service_cluster
       connect_timeout: 5s
-      type: STATIC
+      type: STRICT_DNS
       lb_policy: ROUND_ROBIN
       # Health checks disabled for now - uncomment if services expose /actuator/health
       # health_checks:
@@ -56,16 +56,19 @@ static_resources:
                     socket_address:
                       address: xp-users-service-1
                       port_value: 8081
+                      resolver_name: ""
               - endpoint:
                   address:
                     socket_address:
                       address: xp-users-service-2
                       port_value: 8081
+                      resolver_name: ""
               - endpoint:
                   address:
                     socket_address:
                       address: xp-users-service-3
                       port_value: 8081
+                      resolver_name: ""
 
 admin:
   address:
