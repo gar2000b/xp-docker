@@ -55,6 +55,8 @@ services:
     depends_on:
       - influxdb
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-ohlcv-generator-service
       # --- Spring Boot configuration ---
       SERVER_PORT: 8083
       # --- InfluxDB configuration ---
@@ -75,6 +77,8 @@ services:
       - mariadb
       - xp-ohlcv-generator-service
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-quotes-service-1
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
@@ -96,6 +100,8 @@ services:
       - mariadb
       - xp-ohlcv-generator-service
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-quotes-service-2
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
@@ -117,6 +123,8 @@ services:
       - mariadb
       - xp-ohlcv-generator-service
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-quotes-service-3
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
@@ -191,6 +199,8 @@ services:
     depends_on:
       - mariadb
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-template-service
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
