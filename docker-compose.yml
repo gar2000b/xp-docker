@@ -33,6 +33,21 @@ services:
       - influxdb_data:/var/lib/influxdb2
       - influxdb_config:/etc/influxdb2
 
+  envoy:
+    image: envoyproxy/envoy:v1.32-latest
+    container_name: envoy
+    restart: unless-stopped
+    depends_on:
+      - xp-users-service-1
+      - xp-users-service-2
+      - xp-users-service-3
+    ports:
+      - "8011:8011"   # HTTP listener for xp-users-service
+      - "9901:9901"   # Admin interface
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+    command: /usr/local/bin/envoy -c /etc/envoy/envoy.yaml --service-cluster envoy-proxy
+
   xp-ohlcv-generator-service:
     image: gar2000b/xp-ohlcv-generator-service:latest
     container_name: xp-ohlcv-generator-service
