@@ -30,6 +30,36 @@ static_resources:
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
+    # HTTP listener for xp-quotes-service load balancing
+    - name: quotes_service_listener
+      address:
+        socket_address:
+          protocol: TCP
+          address: 0.0.0.0
+          port_value: 8012
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: quotes_service_http
+                codec_type: AUTO
+                route_config:
+                  name: quotes_service_route
+                  virtual_hosts:
+                    - name: quotes_service
+                      domains: ["*"]
+                      routes:
+                        - match:
+                            prefix: "/"
+                          route:
+                            cluster: quotes_service_cluster
+                            timeout: 30s
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+
   clusters:
     # Cluster for xp-users-service instances
     - name: users_service_cluster
@@ -68,6 +98,45 @@ static_resources:
                     socket_address:
                       address: xp-users-service-3
                       port_value: 8081
+                      resolver_name: ""
+
+    # Cluster for xp-quotes-service instances
+    - name: quotes_service_cluster
+      connect_timeout: 5s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      # Health checks disabled for now - uncomment if services expose /actuator/health
+      # health_checks:
+      #   - timeout: 3s
+      #     interval: 10s
+      #     unhealthy_threshold: 3
+      #     healthy_threshold: 2
+      #     http_health_check:
+      #       path: "/actuator/health"
+      #       expected_statuses:
+      #         - start: 200
+      #           end: 399
+      load_assignment:
+        cluster_name: quotes_service_cluster
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: xp-quotes-service-1
+                      port_value: 8082
+                      resolver_name: ""
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: xp-quotes-service-2
+                      port_value: 8082
+                      resolver_name: ""
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: xp-quotes-service-3
+                      port_value: 8082
                       resolver_name: ""
 
 admin:

@@ -41,8 +41,12 @@ services:
       - xp-users-service-1
       - xp-users-service-2
       - xp-users-service-3
+      - xp-quotes-service-1
+      - xp-quotes-service-2
+      - xp-quotes-service-3
     ports:
       - "8011:8011"   # HTTP listener for xp-users-service
+      - "8012:8012"   # HTTP listener for xp-quotes-service
       - "9901:9901"   # Admin interface
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
