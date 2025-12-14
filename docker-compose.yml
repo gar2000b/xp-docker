@@ -137,6 +137,8 @@ services:
     depends_on:
       - mariadb
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-users-service-1
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
@@ -153,6 +155,8 @@ services:
     depends_on:
       - mariadb
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-users-service-2
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
@@ -169,6 +173,8 @@ services:
     depends_on:
       - mariadb
     environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-users-service-3
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
