@@ -34,15 +34,19 @@ static_resources:
     # Cluster for xp-users-service instances
     - name: users_service_cluster
       connect_timeout: 5s
-      type: STATIC_DNS
+      type: STATIC
       lb_policy: ROUND_ROBIN
-      health_checks:
-        - timeout: 3s
-          interval: 10s
-          unhealthy_threshold: 3
-          healthy_threshold: 2
-          http_health_check:
-            path: "/actuator/health"
+      # Health checks disabled for now - uncomment if services expose /actuator/health
+      # health_checks:
+      #   - timeout: 3s
+      #     interval: 10s
+      #     unhealthy_threshold: 3
+      #     healthy_threshold: 2
+      #     http_health_check:
+      #       path: "/actuator/health"
+      #       expected_statuses:
+      #         - start: 200
+      #           end: 399
       load_assignment:
         cluster_name: users_service_cluster
         endpoints:
