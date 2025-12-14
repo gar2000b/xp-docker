@@ -52,9 +52,9 @@ services:
     volumes:
       - ./logs:/app/logs
 
-  xp-quotes-service:
+  xp-quotes-service-1:
     image: gar2000b/xp-quotes-service:latest
-    container_name: xp-quotes-service
+    container_name: xp-quotes-service-1
     restart: unless-stopped
     depends_on:
       - mariadb
@@ -70,6 +70,48 @@ services:
       SPRING_DATASOURCE_PASSWORD: password
     ports:
       - "8082:8082"
+    volumes:
+      - ./logs:/app/logs
+
+  xp-quotes-service-2:
+    image: gar2000b/xp-quotes-service:latest
+    container_name: xp-quotes-service-2
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - xp-ohlcv-generator-service
+    environment:
+      # --- Spring Boot configuration ---
+      SERVER_PORT: 8082
+      # --- gRPC Client configuration ---
+      GRPC_CLIENT_OHLCV_GENERATOR_SERVICE_ADDRESS: static://xp-ohlcv-generator-service:9093
+      # --- Spring Boot style, if you're using it ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8085:8082"
+    volumes:
+      - ./logs:/app/logs
+
+  xp-quotes-service-3:
+    image: gar2000b/xp-quotes-service:latest
+    container_name: xp-quotes-service-3
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - xp-ohlcv-generator-service
+    environment:
+      # --- Spring Boot configuration ---
+      SERVER_PORT: 8082
+      # --- gRPC Client configuration ---
+      GRPC_CLIENT_OHLCV_GENERATOR_SERVICE_ADDRESS: static://xp-ohlcv-generator-service:9093
+      # --- Spring Boot style, if you're using it ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8088:8082"
     volumes:
       - ./logs:/app/logs
 
