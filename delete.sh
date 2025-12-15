@@ -13,3 +13,7 @@ docker volume rm xp-docker_influxdb_config || echo "Volume xp-docker_influxdb_co
 
 echo ">>> Delete complete."
 
+# reset the blinking cursor
+tput cnorm 2>/dev/null || true
+printf '\e[?25h' 2>/dev/null || true
+stty sane 2>/dev/null || true

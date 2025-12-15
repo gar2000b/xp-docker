@@ -28,3 +28,8 @@ docker exec -i influxdb influx bucket create --name ohlcv_data --org xp-project 
 echo ">>> InfluxDB ohlcv_data bucket created."
 
 tree
+
+# reset the blinking cursor
+tput cnorm 2>/dev/null || true
+printf '\e[?25h' 2>/dev/null || true
+stty sane 2>/dev/null || true
