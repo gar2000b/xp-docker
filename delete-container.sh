@@ -17,6 +17,16 @@ docker stop "$CONTAINER_NAME" || echo "Container $CONTAINER_NAME not running, sk
 echo ">>> Removing container: $CONTAINER_NAME"
 docker rm "$CONTAINER_NAME" || echo "Container $CONTAINER_NAME not found, skipping remove."
 
+# Remove volumes for specific containers
+if [ "$CONTAINER_NAME" = "mariadb" ]; then
+    echo ">>> Removing MariaDB volume..."
+    docker volume rm xp-docker_mariadb_data || echo "Volume xp-docker_mariadb_data not found, skipping."
+elif [ "$CONTAINER_NAME" = "influxdb" ]; then
+    echo ">>> Removing InfluxDB volumes..."
+    docker volume rm xp-docker_influxdb_data || echo "Volume xp-docker_influxdb_data not found, skipping."
+    docker volume rm xp-docker_influxdb_config || echo "Volume xp-docker_influxdb_config not found, skipping."
+fi
+
 echo ">>> Delete complete."
 
 # reset the blinking cursor
