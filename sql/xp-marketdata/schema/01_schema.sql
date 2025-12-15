@@ -1,8 +1,8 @@
--- Consumer Group Allocation Table
+-- Consumer Group Lease Table
 -- Supports lease/lock pattern for Kafka consumer groups
--- Services acquire locks on startup and release on shutdown
--- Locks expire automatically if service becomes unhealthy
-CREATE TABLE IF NOT EXISTS consumer_group_allocations (
+-- Services acquire leases (locks) on startup and release on shutdown
+-- Leases expire automatically if service becomes unhealthy
+CREATE TABLE IF NOT EXISTS consumer_group_leases (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     consumer_group_name VARCHAR(255) NOT NULL UNIQUE,
     locked_by_instance_id VARCHAR(255) DEFAULT NULL COMMENT 'Instance ID of the service holding the lock',
