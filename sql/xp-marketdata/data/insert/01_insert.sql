@@ -1,0 +1,2 @@
+-- Insert scripts for xp-marketdata database
+-- Add INSERT statements here

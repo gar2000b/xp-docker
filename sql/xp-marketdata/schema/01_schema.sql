@@ -1,0 +1,2 @@
+-- Schema scripts for xp-marketdata database
+-- Add CREATE TABLE statements here

@@ -14,7 +14,7 @@ set -e
 #     data/insert/*.sql
 #     data/update/*.sql
 #
-DATABASES="xp-users:xp-users reporting_db:reporting_db"
+DATABASES="xp-users:xp-users reporting_db:reporting_db xp-marketdata:xp-marketdata"
 
 # Root password comes from container env (set in docker-compose)
 ROOT_PW="${MARIADB_ROOT_PASSWORD}"

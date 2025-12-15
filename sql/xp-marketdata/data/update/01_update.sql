@@ -1,0 +1,2 @@
+-- Update scripts for xp-marketdata database
+-- Add UPDATE/ALTER statements here
