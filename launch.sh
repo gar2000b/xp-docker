@@ -27,6 +27,10 @@ docker exec -i influxdb influx bucket create --name ohlcv_data --org xp-project 
 
 echo ">>> InfluxDB ohlcv_data bucket created."
 
+docker exec kafka-1 /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:29092,kafka-2:29092,kafka-3:29092 --create --topic ohlcv-topic --partitions 3 --replication-factor 3 --if-not-exists
+
+echo ">>> Kafka ohlcv-topic created."
+
 tree
 
 # reset the blinking cursor
