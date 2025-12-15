@@ -10,6 +10,9 @@ echo ">>> Removing volumes..."
 docker volume rm xp-docker_mariadb_data || echo "Volume xp-docker_mariadb_data not found, skipping."
 docker volume rm xp-docker_influxdb_data || echo "Volume xp-docker_influxdb_data not found, skipping."
 docker volume rm xp-docker_influxdb_config || echo "Volume xp-docker_influxdb_config not found, skipping."
+docker volume rm xp-docker_kafka-1_data || echo "Volume xp-docker_kafka-1_data not found, skipping."
+docker volume rm xp-docker_kafka-2_data || echo "Volume xp-docker_kafka-2_data not found, skipping."
+docker volume rm xp-docker_kafka-3_data || echo "Volume xp-docker_kafka-3_data not found, skipping."
 
 echo ">>> Delete complete."
 

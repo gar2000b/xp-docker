@@ -25,6 +25,15 @@ elif [ "$CONTAINER_NAME" = "influxdb" ]; then
     echo ">>> Removing InfluxDB volumes..."
     docker volume rm xp-docker_influxdb_data || echo "Volume xp-docker_influxdb_data not found, skipping."
     docker volume rm xp-docker_influxdb_config || echo "Volume xp-docker_influxdb_config not found, skipping."
+elif [ "$CONTAINER_NAME" = "kafka-1" ]; then
+    echo ">>> Removing Kafka-1 volume..."
+    docker volume rm xp-docker_kafka-1_data || echo "Volume xp-docker_kafka-1_data not found, skipping."
+elif [ "$CONTAINER_NAME" = "kafka-2" ]; then
+    echo ">>> Removing Kafka-2 volume..."
+    docker volume rm xp-docker_kafka-2_data || echo "Volume xp-docker_kafka-2_data not found, skipping."
+elif [ "$CONTAINER_NAME" = "kafka-3" ]; then
+    echo ">>> Removing Kafka-3 volume..."
+    docker volume rm xp-docker_kafka-3_data || echo "Volume xp-docker_kafka-3_data not found, skipping."
 fi
 
 echo ">>> Delete complete."
