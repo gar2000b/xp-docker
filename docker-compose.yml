@@ -108,6 +108,7 @@ services:
   kafka-init:
     image: apache/kafka:latest
     container_name: kafka-init
+    restart: "no"
     depends_on:
       - kafka-1
       - kafka-2
@@ -115,8 +116,20 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command: |
       echo "Waiting for Kafka brokers to be ready..."
-      sleep 10
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:29092,kafka-2:29092,kafka-3:29092 --create --topic ohlcv-topic --partitions 3 --replication-factor 3 --if-not-exists || true
+      until /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka-1:29092 --command-config /dev/null 2>/dev/null; do
+        echo "Waiting for kafka-1..."
+        sleep 2
+      done
+      until /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka-2:29092 --command-config /dev/null 2>/dev/null; do
+        echo "Waiting for kafka-2..."
+        sleep 2
+      done
+      until /opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server kafka-3:29092 --command-config /dev/null 2>/dev/null; do
+        echo "Waiting for kafka-3..."
+        sleep 2
+      done
+      echo "All Kafka brokers are ready!"
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:29092,kafka-2:29092,kafka-3:29092 --create --topic ohlcv-topic --partitions 3 --replication-factor 3 --if-not-exists
       echo "Topic 'ohlcv-topic' created (or already exists)"
 
   kafka-ui:
