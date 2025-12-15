@@ -105,6 +105,20 @@ services:
     volumes:
       - kafka-3_data:/var/lib/kafka/data
 
+  kafka-init:
+    image: apache/kafka:latest
+    container_name: kafka-init
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      echo "Waiting for Kafka brokers to be ready..."
+      sleep 10
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka-1:29092,kafka-2:29092,kafka-3:29092 --create --topic ohlcv-topic --partitions 3 --replication-factor 3 --if-not-exists || true
+      echo "Topic 'ohlcv-topic' created (or already exists)"
+
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
