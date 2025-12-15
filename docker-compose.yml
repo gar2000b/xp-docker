@@ -174,6 +174,9 @@ services:
     restart: unless-stopped
     depends_on:
       - influxdb
+      - kafka-1
+      - kafka-2
+      - kafka-3
     environment:
       # --- Instance identification ---
       INSTANCE_ID: xp-ohlcv-generator-service
@@ -184,8 +187,30 @@ services:
       INFLUXDB_TOKEN: xp-admin-token-12345
       INFLUXDB_ORG: xp-project
       INFLUXDB_BUCKET: ohlcv_data
+      # --- Kafka configuration ---
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29092,kafka-3:29092
     ports:
       - "8083:8083"
+    volumes:
+      - ./logs:/app/logs
+
+  xp-marketdata-service:
+    image: gar2000b/xp-marketdata-service:latest
+    container_name: xp-marketdata-service
+    restart: unless-stopped
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-marketdata-service
+      # --- Spring Boot configuration ---
+      SERVER_PORT: 8089
+      # --- Kafka configuration ---
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29092,kafka-3:29092
+    ports:
+      - "8089:8089"
     volumes:
       - ./logs:/app/logs
 
@@ -195,14 +220,14 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-      - xp-ohlcv-generator-service
+      - xp-marketdata-service
     environment:
       # --- Instance identification ---
       INSTANCE_ID: xp-quotes-service-1
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
-      GRPC_CLIENT_OHLCV_GENERATOR_SERVICE_ADDRESS: static://xp-ohlcv-generator-service:9093
+      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service:9093
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
@@ -218,14 +243,14 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-      - xp-ohlcv-generator-service
+      - xp-marketdata-service
     environment:
       # --- Instance identification ---
       INSTANCE_ID: xp-quotes-service-2
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
-      GRPC_CLIENT_OHLCV_GENERATOR_SERVICE_ADDRESS: static://xp-ohlcv-generator-service:9093
+      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service:9093
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
@@ -241,14 +266,14 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-      - xp-ohlcv-generator-service
+      - xp-marketdata-service
     environment:
       # --- Instance identification ---
       INSTANCE_ID: xp-quotes-service-3
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
-      GRPC_CLIENT_OHLCV_GENERATOR_SERVICE_ADDRESS: static://xp-ohlcv-generator-service:9093
+      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service:9093
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
