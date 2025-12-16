@@ -199,6 +199,7 @@ services:
     container_name: xp-marketdata-service
     restart: unless-stopped
     depends_on:
+      - mariadb
       - kafka-1
       - kafka-2
       - kafka-3
@@ -208,6 +209,10 @@ services:
       INSTANCE_ID: xp-marketdata-service
       # --- Spring Boot configuration ---
       SERVER_PORT: 8089
+      # --- Database configuration ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-marketdata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
       # --- Kafka configuration ---
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29092,kafka-3:29092
       SPRING_KAFKA_CONSUMER_GROUP_ID: xp-marketdata-service-group
