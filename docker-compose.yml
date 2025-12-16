@@ -194,9 +194,9 @@ services:
     volumes:
       - ./logs:/app/logs
 
-  xp-marketdata-service:
+  xp-marketdata-service-1:
     image: gar2000b/xp-marketdata-service:latest
-    container_name: xp-marketdata-service
+    container_name: xp-marketdata-service-1
     restart: unless-stopped
     depends_on:
       - mariadb
@@ -206,9 +206,11 @@ services:
       - kafka-init
     environment:
       # --- Instance identification ---
-      INSTANCE_ID: xp-marketdata-service
+      INSTANCE_ID: xp-marketdata-service-1
       # --- Spring Boot configuration ---
       SERVER_PORT: 8089
+      # --- gRPC Server configuration ---
+      GRPC_SERVER_PORT: 9093
       # --- Database configuration ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-marketdata
       SPRING_DATASOURCE_USERNAME: root
@@ -217,8 +219,95 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29092,kafka-3:29092
       SPRING_KAFKA_CONSUMER_GROUP_ID: xp-marketdata-service-group
       SPRING_KAFKA_TOPIC_OHLCV: ohlcv-topic
+      # --- Lease configuration ---
+      APP_LEASE_DURATION_SECONDS: 30
+      APP_LEASE_RENEWAL_INTERVAL_SECONDS: 20
+      # --- InfluxDB configuration ---
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: xp-admin-token-12345
+      INFLUXDB_ORG: xp-project
+      INFLUXDB_BUCKET: ohlcv_data
     ports:
       - "8089:8089"
+      - "9093:9093"
+    volumes:
+      - ./logs:/app/logs
+
+  xp-marketdata-service-2:
+    image: gar2000b/xp-marketdata-service:latest
+    container_name: xp-marketdata-service-2
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - kafka-init
+    environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-marketdata-service-2
+      # --- Spring Boot configuration ---
+      SERVER_PORT: 8090
+      # --- gRPC Server configuration ---
+      GRPC_SERVER_PORT: 9094
+      # --- Database configuration ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-marketdata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      # --- Kafka configuration ---
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29092,kafka-3:29092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: xp-marketdata-service-group
+      SPRING_KAFKA_TOPIC_OHLCV: ohlcv-topic
+      # --- Lease configuration ---
+      APP_LEASE_DURATION_SECONDS: 30
+      APP_LEASE_RENEWAL_INTERVAL_SECONDS: 20
+      # --- InfluxDB configuration ---
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: xp-admin-token-12345
+      INFLUXDB_ORG: xp-project
+      INFLUXDB_BUCKET: ohlcv_data
+    ports:
+      - "8090:8090"
+      - "9094:9094"
+    volumes:
+      - ./logs:/app/logs
+
+  xp-marketdata-service-3:
+    image: gar2000b/xp-marketdata-service:latest
+    container_name: xp-marketdata-service-3
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - kafka-init
+    environment:
+      # --- Instance identification ---
+      INSTANCE_ID: xp-marketdata-service-3
+      # --- Spring Boot configuration ---
+      SERVER_PORT: 8091
+      # --- gRPC Server configuration ---
+      GRPC_SERVER_PORT: 9095
+      # --- Database configuration ---
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-marketdata
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      # --- Kafka configuration ---
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-1:29092,kafka-2:29092,kafka-3:29092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: xp-marketdata-service-group
+      SPRING_KAFKA_TOPIC_OHLCV: ohlcv-topic
+      # --- Lease configuration ---
+      APP_LEASE_DURATION_SECONDS: 30
+      APP_LEASE_RENEWAL_INTERVAL_SECONDS: 20
+      # --- InfluxDB configuration ---
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: xp-admin-token-12345
+      INFLUXDB_ORG: xp-project
+      INFLUXDB_BUCKET: ohlcv_data
+    ports:
+      - "8091:8091"
+      - "9095:9095"
     volumes:
       - ./logs:/app/logs
 
@@ -228,14 +317,17 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-      - xp-marketdata-service
+      - xp-marketdata-service-1
+      - xp-marketdata-service-2
+      - xp-marketdata-service-3
     environment:
       # --- Instance identification ---
       INSTANCE_ID: xp-quotes-service-1
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
-      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service:9093
+      # Using instance 1 as primary (consider load balancer for production)
+      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service-1:9093
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
@@ -251,14 +343,17 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-      - xp-marketdata-service
+      - xp-marketdata-service-1
+      - xp-marketdata-service-2
+      - xp-marketdata-service-3
     environment:
       # --- Instance identification ---
       INSTANCE_ID: xp-quotes-service-2
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
-      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service:9093
+      # Using instance 1 as primary (consider load balancer for production)
+      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service-1:9093
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
@@ -274,14 +369,17 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-      - xp-marketdata-service
+      - xp-marketdata-service-1
+      - xp-marketdata-service-2
+      - xp-marketdata-service-3
     environment:
       # --- Instance identification ---
       INSTANCE_ID: xp-quotes-service-3
       # --- Spring Boot configuration ---
       SERVER_PORT: 8082
       # --- gRPC Client configuration ---
-      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service:9093
+      # Using instance 1 as primary (consider load balancer for production)
+      GRPC_CLIENT_XP_MARKETDATA_SERVICE_ADDRESS: static://xp-marketdata-service-1:9093
       # --- Spring Boot style, if you're using it ---
       SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/xp-users
       SPRING_DATASOURCE_USERNAME: root
